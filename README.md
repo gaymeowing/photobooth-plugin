@@ -1,3 +1,17 @@
+<!-- Links -->
+
+[links/roblox]: https://create.roblox.com/store/asset/82716202460157
+[links/itch]: https://egomoose.itch.io/rbx-photobooth-plugin
+[links/discord]: https://discord.gg/VgxVYZHV3N
+[links/devforum]: https://devforum.roblox.com/t/3401720
+[links/gltf-site]: https://photobooth-rbx.github.io/photobooth-plugin-site/
+
+<!-- Badges -->
+
+[badges/roblox]: https://raw.githubusercontent.com/gist/cxmeel/0dbc95191f239b631c3874f4ccf114e2/raw/roblox_dev.svg
+[badges/itch]: https://raw.githubusercontent.com/gist/cxmeel/0dbc95191f239b631c3874f4ccf114e2/raw/itch.svg
+[badges/discord]: https://raw.githubusercontent.com/gist/cxmeel/0dbc95191f239b631c3874f4ccf114e2/raw/discord.svg
+
 ## Developer Request
 
 This project is AGPL-3.0. If you modify this plugin and use it in a public-facing project, you are obligated to make your modified source code available. While I can't stop you from using modifications privately I strongly encourage you to contribute improvements back. If you've optimized something or added a feature that helps you or your team, please consider a PR so everyone benefits.
@@ -16,9 +30,9 @@ Notably, it features the ability to remove skyboxes/backgrounds from images and 
 
 Results are output as editable images stored as a mesh part's texture.
 
-[![](docs/assets/readme/badges/roblox-marketplace-badge.svg)](https://create.roblox.com/store/asset/82716202460157) [![](docs/assets/readme/badges/itch-badge.svg)](https://egomoose.itch.io/rbx-photobooth-plugin)
+[![Get it on Roblox][badges/roblox]][links/roblox] [![Get it on Itch.io][badges/itch]][links/itch] [![Join us on Discord][badges/discord]][links/discord]
 
-[Devforum post](https://devforum.roblox.com/t/3401720)
+[Devforum post][links/devforum]
 
 <details>
 <summary>Examples</summary>
@@ -41,6 +55,7 @@ General:
 - Using the emulator + photobooth only works correctly when on "actual resolution"
 - The viewport must be visible when capturing. You cannot tab out of studio or switch to the script editor while a capture is in progress.
 - `Studio Settings > Rendering > Graphics Mode = OpenGL` is unsupported (this is a Roblox bug).
+- `Studio Settings > Rendering > Graphics Mode = Vulkan` is supported, but some users experience a bug where emulators that match their display resolution force them into fullscreen and won’t allow them to take captures.
 
 Skybox removal:
 - No atmosphere / fog support.
@@ -144,7 +159,7 @@ If you want to export many images at the same time. First group all the mesh par
 
 Alternatively, you can also export your photobooth selection in the [glTF format](https://devforum.roblox.com/t/gltf-export-beta-available-now/3905928). This may be preferable as many users have reported that sometimes exporting as an obj can crash studio.
 
-In order to extract the pngs from the glTF file you'll need an additional tool. For convenience I've created a website found [here](https://egomoose.github.io/photobooth-plugin-site/) where you can drag and drop the export and get the resulting pngs.
+In order to extract the pngs from the glTF file you'll need an additional tool. For convenience I've created a website found [here][links/gltf-site] where you can drag and drop the export and get the resulting pngs.
 
 ## Uploading
 

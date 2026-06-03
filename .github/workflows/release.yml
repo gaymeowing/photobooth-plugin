@@ -4,64 +4,72 @@ on:
   push:
     tags: ["v*"]
 
-jobs:
-  release:
-    name: Create Release
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
+permissions:
+  contents: write
 
-      - name: Create Release
+env:
+  PLUGIN_NAME: photobooth
+  BINDINGS_NAME: photobooth-bindings
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v6
+      
+      - name: 🚀 Create Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release create ${{ github.ref_name }} --draft --verify-tag --title ${{ github.ref_name }}
 
-      - name: "Setup rokit"
+  release-plugin:
+    if: false
+    needs: ["create-release"]
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v6
+
+      - name: 🔧 Install Rokit
         uses: CompeyDev/setup-rokit@v0.1.2
 
-      - name: "Run create-bindings-package"
-        run: |
-          lune run create-bindings-package
+      - name: 📦 Install packages
+        run: lune run wally-install
 
-      - name: "Build bindings package"
-        run: |
-          rojo build bindings-package/default.project.json --output bindings-package/photobooth-bindings-${{ github.ref_name }}.rbxm
+      - name: 🏗️ Build ${{ env.PLUGIN_NAME }}-${{ github.ref_name }}.rbxm
+        run: rojo build plugin.project.json --output ${{ env.PLUGIN_NAME }}-${{ github.ref_name }}.rbxm
 
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v6
-        with:
-          name: photobooth-bindings
-          path: bindings-package/photobooth-bindings-${{ github.ref_name }}.rbxm
-      
-      - name: Upload bindings rbxm to Release
+      - name: 📤 Upload to Release
         shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release upload ${{ github.ref_name }} bindings-package/photobooth-bindings-${{ github.ref_name }}.rbxm
+          gh release upload ${{ github.ref_name }} ${{ env.PLUGIN_NAME }}-${{ github.ref_name }}.rbxm
 
+  release-bindings:
+    needs: ["create-release"]
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v6
 
-      # - name: "Run wally install"
-      #   run: |
-      #     lune run wally-install
+      - name: 🔧 Install Rokit
+        uses: CompeyDev/setup-rokit@v0.1.2
 
-      # - name: "Build rbxm"
-      #   run: |
-      #     rojo build plugin.project.json --output photobooth-${{ github.ref_name }}.rbxm
+      - name: 📦 Install packages
+        run: lune run wally-install
 
-      # - name: Create Archive and Upload to Release
-      #   shell: bash
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   run: |
-      #     gh release upload ${{ github.ref_name }} photobooth-${{ github.ref_name }}.rbxm
+      - name: 🚧 Create ${{ env.BINDINGS_NAME }} project folder
+        run: lune run create-bindings-package
       
-      # - name: Upload build artifact
-      #   uses: actions/upload-artifact@v6
-      #   with:
-      #     name: release
-      #     path: photobooth-${{ github.ref_name }}.rbxm
+      - name: 🏗️ Build ${{ env.BINDINGS_NAME }}-${{ github.ref_name }}.rbxm
+        run: rojo build bindings-package/default.project.json --output bindings-package/${{ env.BINDINGS_NAME }}-${{ github.ref_name }}.rbxm
+
+      - name: 📤 Upload to Release
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release upload ${{ github.ref_name }} bindings-package/${{ env.BINDINGS_NAME }}-${{ github.ref_name }}.rbxm
